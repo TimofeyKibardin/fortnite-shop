@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { API_BASE_URL, API_KEY } from "@shared/config/config";
+import { API_BASE_URL, API_KEY } from "../shared/config/config";
 
 /** Ошибка единого формата */
 export class ApiError extends Error {

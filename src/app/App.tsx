@@ -1,12 +1,13 @@
 import Header from '../widgets/header/Header';
-import Footer from '../widgets/header/Footer';
+import Footer from '../widgets/footer/Footer';
+import HomePage from '../pages/home/HomePage';
 
 function App() {
   return (
     <div>
         <Header />
-        {/* Страницы */}
-        <Footer />
+        <HomePage />
+        <Footer />  
     </div>
   );
 }
