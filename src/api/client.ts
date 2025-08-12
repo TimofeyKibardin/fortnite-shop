@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
-import { API_BASE_URL, API_KEY } from "../shared/config/config";
+import { API_BASE_URL } from "../shared/config/config";
+import { getAuthToken } from './auth';
 
 /** Ошибка единого формата */
 export class ApiError extends Error {
@@ -13,20 +14,18 @@ export class ApiError extends Error {
   }
 }
 
-
 // Экземпляр axios
 export const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 15000,
+  timeout: 30000,
   headers: { 'Content-Type': 'application/json' },
 });
 
 // Ключ авторизации
-api.interceptors.request.use((config) => {
-    if (API_KEY) {
-        config.headers = config.headers ?? {};
-        config.headers.Authorization = `Bearer ${API_KEY}`;
-    }
+api.interceptors.request.use(async (config) => {
+    const token = await getAuthToken(); // получаем токен из кэша или создаём новый
+    config.headers = config.headers ?? {};
+    config.headers.Authorization = `Bearer ${token}`;
     return config;
 });
 

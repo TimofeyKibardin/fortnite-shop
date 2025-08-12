@@ -20,7 +20,7 @@ export interface ShopItems {
   displayName: string;
   rarity?: ItemRarity;
   price?: ItemPrice;
-  full_background?: ItemAssets[];
+  displayAssets?: ItemAssets[];
 }
 
 export interface ShopResponse {
