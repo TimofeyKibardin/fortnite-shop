@@ -16,17 +16,17 @@ export interface ItemRarity {
 }
 
 export interface ShopItems {
-  mainId: string;
-  displayName: string;
-  rarity?: ItemRarity;
-  price?: ItemPrice;
-  displayAssets?: ItemAssets[];
+    mainId: string;
+    displayName: string;
+    rarity?: ItemRarity;
+    price?: ItemPrice;
+    displayAssets?: ItemAssets[];
 }
 
 export interface ShopResponse {
-  result: boolean;
-  lastUpdate?: string;
-  shop: ShopItems[];
+    result: boolean;
+    lastUpdate?: string;
+    shop: ShopItems[];
 }
 
 

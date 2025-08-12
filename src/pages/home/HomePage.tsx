@@ -11,7 +11,14 @@ export default function HomePage(): JSX.Element {
 
     // Пагинация
     const [page, setPage] = useState(1);
-    const [pageSize, setPageSize] = useState(12); // Карточек на странице
+    const [pageSize, setPageSize] = useState(() => {
+        const stored = localStorage.getItem('pageSize');
+        if (stored) {
+            const sizeFromStorage = Number(stored);
+            return isNaN(sizeFromStorage) ? 12 : sizeFromStorage;
+        }
+        return 12;
+    }); // Карточек на странице
 
     // Загрузка данных
     const load = useCallback(() => {
@@ -34,8 +41,7 @@ export default function HomePage(): JSX.Element {
 
     // Сбор единого массива товаров из ответа
     const items = useMemo(() => {
-        const shop = Array.isArray((data as any)?.shop) ? (data as any).shop : [];
-        return [...shop];
+        return data?.shop?.filter((s) => s.mainId && s.displayName) ?? [];
     }, [data]);
 
     // Считаем страницы и текущий срез
@@ -51,6 +57,11 @@ export default function HomePage(): JSX.Element {
     useEffect(() => {
         setPage(1);
     }, [items.length, pageSize]);
+
+    // Сохранение выбранного кол-ва карточек на странице
+    useEffect(() => {
+        localStorage.setItem('pageSize', pageSize.toString());
+    }, [pageSize]);
 
     const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
@@ -112,14 +123,14 @@ export default function HomePage(): JSX.Element {
                     {/* Пагинация ещё раз снизу */}
                     {items.length > pageSize && (
                         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-                        <Pagination
-                            count={totalPages}
-                            page={page}
-                            onChange={handlePageChange}
-                            color="secondary"
-                            siblingCount={1}
-                            boundaryCount={1}
-                        />
+                            <Pagination
+                                count={totalPages}
+                                page={page}
+                                onChange={handlePageChange}
+                                color="secondary"
+                                siblingCount={1}
+                                boundaryCount={1}
+                            />
                         </Box>
                     )}
                 </>

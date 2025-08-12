@@ -12,14 +12,14 @@ export default function GoodsGrid({ goods }: GoodsGridProps) {
         return (
         <Box
             sx={{
-            minHeight: "70vh", // высота для центрирования при пустом списке
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+                minHeight: "70vh", // высота для центрирования при пустом списке
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
             }}
         >
             <Typography variant="h6" color="text.secondary">
-            Нет товаров
+                Нет товаров
             </Typography>
         </Box>
         );
@@ -35,11 +35,14 @@ export default function GoodsGrid({ goods }: GoodsGridProps) {
             }}
         >
             <Grid container spacing={2} justifyContent="center">
-                {goods.map((item) => (
-                    <Grid key={item.mainId}>
-                        <GoodCard {...item} />
-                    </Grid>
-                ))}
+                {goods.map((item) => {
+                    if (!item.mainId || !item.displayName) return null;
+                    return (
+                        <Grid key={item.mainId}>
+                            <GoodCard {...item} />
+                        </Grid>
+                    )
+                })}
             </Grid>
         </Box>  
     );
