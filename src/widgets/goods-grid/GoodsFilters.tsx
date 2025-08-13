@@ -32,7 +32,7 @@ export default function GoodsFilters({ total, pageSize, setPageSize }: GoodsFilt
                             },
                         }}
                     >
-                        На странице 
+                        На странице
                     </InputLabel>
                     <Select
                         labelId="page-size-label"
