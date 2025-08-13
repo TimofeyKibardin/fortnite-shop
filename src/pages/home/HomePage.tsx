@@ -1,9 +1,9 @@
 import { getShop, ShopResponse } from "../../api/shop";
-import { Box, Container, FormControl, InputLabel, MenuItem, Pagination, Select, Stack, Typography } from "@mui/material";
+import { Box, Container, Pagination, Typography } from "@mui/material";
 import { JSX, useState, useEffect, useCallback, useMemo } from "react";
 import GoodsGrid from "../../widgets/goods-grid/GoodsGrid";
 import React from "react";
-import PanelContainer from "../../shared/ui/PanelContainer";
+import GoodsFilters from "../../widgets/goods-grid/GoodsFilters";
 
 export default function HomePage(): JSX.Element {
     const [data, setData] = useState<ShopResponse | null>(null);
@@ -85,37 +85,11 @@ export default function HomePage(): JSX.Element {
             {!loading && !error && (
                 <>
                     {/* Панель управления пагинацией */}
-                    <PanelContainer>
-                        <Typography variant="body2">
-                            Найдено товаров: <b>{items.length}</b>
-                        </Typography>
-                        <Stack direction="row" spacing={2} alignItems="center">
-                            <FormControl size="small" sx={{ minWidth: 140 }}>
-                                <InputLabel id="page-size-label">На странице</InputLabel>
-                                <Select
-                                    labelId="page-size-label"
-                                    value={pageSize}
-                                    label="На странице"
-                                    onChange={(e) => setPageSize(Number(e.target.value))}
-                                >
-                                    <MenuItem value={8}>8</MenuItem>
-                                    <MenuItem value={12}>12</MenuItem>
-                                    <MenuItem value={24}>24</MenuItem>
-                                    <MenuItem value={48}>48</MenuItem>
-                                </Select>
-                            </FormControl>
-
-                            {/* <Pagination
-                                count={totalPages}
-                                page={page}
-                                onChange={handlePageChange}
-                                color="secondary"
-                                siblingCount={1}
-                                boundaryCount={1}
-                            /> */}
-                        </Stack>
-                    </PanelContainer>
-
+                    <GoodsFilters
+                        total={items.length}
+                        pageSize={pageSize}
+                        setPageSize={setPageSize}
+                    />
 
                     <Box sx={{ mb: 2, mt: 2 }}>
                         <GoodsGrid goods={pageItems} />
