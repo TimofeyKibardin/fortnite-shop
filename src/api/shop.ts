@@ -16,6 +16,8 @@ export interface ItemRarity {
 }
 
 export interface ShopItems {
+    combinedId: string; // new
+    inCart: boolean // new
     mainId: string;
     displayName: string;
     rarity?: ItemRarity;

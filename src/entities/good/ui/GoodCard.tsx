@@ -1,7 +1,12 @@
-import React from "react";
-import { Box, Card, CardContent, CardMedia, Chip, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CardMedia, Chip, Tooltip, Typography } from "@mui/material";
+import { RemoveShoppingCart } from "@mui/icons-material";
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+
 import { ShopItems } from "../../../api/shop";
+import { useCart } from "../../../shared/context/CartContext";
+
 import placeholder from '../../../shared/assets/images/card-placeholder.jpg'
+
 
 const rarityColors: Record<string, string> = {
     common: '#a0a0a0',
@@ -12,55 +17,19 @@ const rarityColors: Record<string, string> = {
     mythic: '#e6007e',
 };
 
-export default function GoodCard(item: ShopItems) {
-    const rarityName = item.rarity?.name?.toLowerCase() ?? 'common';
+export default function GoodCard(props: ShopItems) {
+    const { addToCart, removeFromCart, isInCart } = useCart();
+
+    const rarityName = props.rarity?.name?.toLowerCase() ?? 'common';
     const borderColor = rarityColors[rarityName] || '#cccccc';
+    const inCart = isInCart(props.combinedId);
+    const imageSrc = props.displayAssets?.[0]?.full_background || placeholder;
 
-    const cardContent = (
-        <React.Fragment>
-            {item.displayAssets && item.displayAssets[0] && (
-                <CardMedia
-                    component="img"
-                    image={item.displayAssets?.[0]?.full_background || placeholder}
-                    alt={item.displayName}
-                    sx={{ height: 'fit-content', objectFit: 'cover' }}
-                />
-            )}
-            <CardContent>
-                <Tooltip title={item.displayName}>
-                    <Typography 
-                        variant="h6"
-                        component="div"
-                        noWrap
-                    >
-                        {item.displayName}
-                    </Typography>
-                </Tooltip>
-                {item.price && item.price.finalPrice &&
-                    <Typography 
-                        variant="subtitle1"
-                        component="div"
-                        noWrap
-                    >
-                        Price: {item.price.finalPrice}
-                    </Typography>
-                }
-                {item.rarity && item.rarity.name &&
-                    <Chip
-                        label={item.rarity.name}
-                        size="small"
-                        sx={{
-                            backgroundColor: rarityColors[rarityName] || '#ccc',
-                            color: '#fff',
-                            fontWeight: 'bold',
-                            mt: 1
-                        }}
-                    />
-                }
-            </CardContent>
-        </React.Fragment>
-    );
-
+    const handleToggleButton = () => {
+        inCart
+            ? removeFromCart(props.combinedId)
+            : addToCart(props);
+    }
 
     return (
         <Box sx={{ minWidth: 250 }}>
@@ -75,8 +44,46 @@ export default function GoodCard(item: ShopItems) {
                     borderColor
                 }}
             >
-
-                {item.displayName && cardContent}
+                <CardMedia
+                    component="img"
+                    image={imageSrc}
+                    alt={props.displayName}
+                    sx={{ height: 'fit-content', objectFit: 'cover' }}
+                />
+                <CardContent>
+                    {props.rarity && props.rarity.name && (
+                        <Chip
+                            label={props.rarity.name}
+                            size="small"
+                            sx={{
+                                backgroundColor: rarityColors[rarityName] || '#ccc',
+                                color: '#fff',
+                                fontWeight: 'bold',
+                                mb: 1
+                            }}
+                        />
+                    )}
+                    <Tooltip title={props.displayName}>
+                        <Typography variant="h6" component="div" noWrap>
+                            {props.displayName}
+                        </Typography>
+                    </Tooltip>
+                    {props.price?.finalPrice && (
+                        <Typography variant="subtitle1" component="div" noWrap>
+                            Price: {props.price.finalPrice}
+                        </Typography>
+                    )}
+                    <Button
+                        variant={inCart ? "outlined" : "contained"}
+                        color="secondary"
+                        size="small"
+                        startIcon={inCart ? <RemoveShoppingCart /> : <AddShoppingCartIcon />}
+                        onClick={handleToggleButton}
+                        sx={{ mt: '5px' }}
+                    >
+                        {inCart ? 'Remove' : 'Add'}
+                    </Button>
+                </CardContent>
             </Card>
         </Box>
     );

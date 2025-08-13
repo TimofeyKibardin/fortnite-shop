@@ -1,6 +1,3 @@
-export interface CartItem {
-    id: string;           // ID товара
-    name: string;
-    price: number;
-    imageUrl?: string;
-}
+import { ShopItems } from '../../api/shop';
+
+export interface CartItem extends ShopItems {}

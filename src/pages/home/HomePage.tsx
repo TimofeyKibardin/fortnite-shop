@@ -3,6 +3,7 @@ import { Box, Container, FormControl, InputLabel, MenuItem, Pagination, Select, 
 import { JSX, useState, useEffect, useCallback, useMemo } from "react";
 import GoodsGrid from "../../widgets/goods-grid/GoodsGrid";
 import React from "react";
+import PanelContainer from "../../shared/ui/PanelContainer";
 
 export default function HomePage(): JSX.Element {
     const [data, setData] = useState<ShopResponse | null>(null);
@@ -18,7 +19,7 @@ export default function HomePage(): JSX.Element {
             return isNaN(sizeFromStorage) ? 12 : sizeFromStorage;
         }
         return 12;
-    }); // Карточек на странице
+    });
 
     // Загрузка данных
     const load = useCallback(() => {
@@ -41,7 +42,13 @@ export default function HomePage(): JSX.Element {
 
     // Сбор единого массива товаров из ответа
     const items = useMemo(() => {
-        return data?.shop?.filter((s) => s.mainId && s.displayName) ?? [];
+        return data?.shop
+            ?.filter((s) => s.mainId && s.displayName)
+            .map((s) => ({
+                ...s,
+                combinedId: `${s.displayName}-${s.mainId}`,
+                inCart: false
+            })) ?? [];
     }, [data]);
 
     // Считаем страницы и текущий срез
@@ -78,13 +85,7 @@ export default function HomePage(): JSX.Element {
             {!loading && !error && (
                 <>
                     {/* Панель управления пагинацией */}
-                    <Stack
-                        direction={{ xs: 'column', sm: 'row' }}
-                        spacing={2}
-                        alignItems="center"
-                        justifyContent="space-between"
-                        sx={{ mb: 2 }}
-                    >
+                    <PanelContainer>
                         <Typography variant="body2">
                             Найдено товаров: <b>{items.length}</b>
                         </Typography>
@@ -104,16 +105,16 @@ export default function HomePage(): JSX.Element {
                                 </Select>
                             </FormControl>
 
-                            <Pagination
+                            {/* <Pagination
                                 count={totalPages}
                                 page={page}
                                 onChange={handlePageChange}
                                 color="secondary"
                                 siblingCount={1}
                                 boundaryCount={1}
-                            />
+                            /> */}
                         </Stack>
-                    </Stack>
+                    </PanelContainer>
 
 
                     <Box sx={{ mb: 2, mt: 2 }}>
