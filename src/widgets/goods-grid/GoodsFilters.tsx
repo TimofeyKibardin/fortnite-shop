@@ -1,11 +1,15 @@
-import { Box, FormControl, InputLabel, MenuItem, Select, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
+import SelectFilter from "../../shared/ui/SelectFilter";
 
 interface GoodsFiltersProps {
     total: number;
     pageSize: number;
     setPageSize: Dispatch<SetStateAction<number>>;
 }
+
+// PageSizeFilter
+const pageSizeNumbers = [8, 12, 24, 48];
 
 export default function GoodsFilters({ total, pageSize, setPageSize }: GoodsFiltersProps) {
     return (
@@ -19,51 +23,16 @@ export default function GoodsFilters({ total, pageSize, setPageSize }: GoodsFilt
         >
             <Stack direction="row" spacing={2} alignItems="center">
                 <Typography variant="body2">
-                    Найдено товаров: <b>{total}</b>
+                    Items found: <b>{total}</b>
                 </Typography>
 
-                <FormControl size="small" sx={{ minWidth: 140 }}>
-                    <InputLabel
-                        id="page-size-label"
-                        sx={{
-                            color: 'black',
-                            '&.Mui-focused': {
-                                color: 'black'
-                            },
-                        }}
-                    >
-                        На странице
-                    </InputLabel>
-                    <Select
-                        labelId="page-size-label"
-                        value={pageSize}
-                        label="На странице"
-                        onChange={(e) => setPageSize(Number(e.target.value))}
-                        sx={{
-                            color: 'black',
-                            '& .MuiSelect-select': {
-                                fontWeight: 400,
-                            },
-                            '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: '#9c27b0',
-                            },
-                            '&:hover .MuiOutlinedInput-notchedOutline': {
-                                borderColor: '#9c27b0',
-                            },
-                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                borderColor: '#9c27b0',
-                            },
-                            '& .MuiSvgIcon-root': {
-                                color: '#9c27b0',
-                            },
-                        }}
-                    >
-                        <MenuItem value={8}>8</MenuItem>
-                        <MenuItem value={12}>12</MenuItem>
-                        <MenuItem value={24}>24</MenuItem>
-                        <MenuItem value={48}>48</MenuItem>
-                    </Select>
-                </FormControl>
+                <SelectFilter
+                    labelId={"page-size-label"}
+                    value={pageSize}
+                    label={"Page size"}
+                    onChange={(value) => setPageSize(Number(value))}
+                    collection={pageSizeNumbers}
+                />
             </Stack>
         </Box>
     );

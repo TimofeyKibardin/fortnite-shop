@@ -26,7 +26,7 @@ export default function GoodsGrid({ goods }: GoodsGridProps) {
         return (
         <Box
             sx={{
-                minHeight: "70vh", // высота для центрирования при пустом списке
+                minHeight: "70vh", // empty list height
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -42,10 +42,10 @@ export default function GoodsGrid({ goods }: GoodsGridProps) {
     return (
         <Box
             sx={{
-                minHeight: "70vh", // центрируем по высоте
+                minHeight: "70vh", // empty list height
                 display: "flex",
-                alignItems: "center", // по вертикали
-                justifyContent: "center", // по горизонтали
+                alignItems: "center",
+                justifyContent: "center",
             }}
         >
             <Grid container spacing={2} justifyContent="center">
