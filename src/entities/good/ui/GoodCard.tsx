@@ -1,26 +1,25 @@
 import { Box, Button, Card, CardContent, CardMedia, Chip, Tooltip, Typography } from "@mui/material";
 import { RemoveShoppingCart } from "@mui/icons-material";
+import { observer } from "mobx-react-lite";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
-import { ShopItems } from "../../../api/shop";
-import { useCart } from "../../../shared/context/CartContext";
-import { getRarity } from '../../../shared/constants/rarity';
+import { cartStore } from "../../..";
 
+import { ShopItems } from "../../../api/shop";
+import { getRarity } from '../../../shared/constants/rarity';
 import placeholder from '../../../shared/assets/images/card-placeholder.jpg'
 
 
-export default function GoodCard(props: ShopItems) {
-    const { addToCart, removeFromCart, isInCart } = useCart();
-
+export default observer(function GoodCard(props: ShopItems) {
     const rarity = getRarity(props.rarity?.name || '');
 
-    const inCart = isInCart(props.combinedId);
+    const inCart = cartStore.isInCart(props.combinedId);
     const imageSrc = props.displayAssets?.[0]?.full_background || placeholder;
 
     const handleToggleButton = () => {
         inCart
-            ? removeFromCart(props.combinedId)
-            : addToCart(props);
+            ? cartStore.removeFromCart(props.combinedId)
+            : cartStore.addToCart(props);
     }
 
     return (
@@ -79,4 +78,4 @@ export default function GoodCard(props: ShopItems) {
             </Card>
         </Box>
     );
-}
+});
