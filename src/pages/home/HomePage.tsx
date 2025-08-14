@@ -1,4 +1,4 @@
-import { getShop, ShopResponse } from "../../api/shop";
+import { getItemsList, getShop, ShopResponse } from "../../api/shop";
 import { Box, Container, Pagination, Typography } from "@mui/material";
 import { JSX, useState, useEffect, useCallback, useMemo } from "react";
 import GoodsGrid from "../../widgets/goods-grid/GoodsGrid";
@@ -26,6 +26,7 @@ export default function HomePage(): JSX.Element {
         setLoading(true);
         setError(null);
         getShop('en')
+        // getItemsList('en')
             .then((res) => {
                 setData(res);
                 setError(null);

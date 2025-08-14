@@ -16,9 +16,10 @@ export interface ItemRarity {
 }
 
 export interface ShopItems {
-    combinedId: string; // new
-    inCart: boolean // new
+    combinedId: string;
+    inCart: boolean;
     mainId: string;
+    mainType: string;
     displayName: string;
     rarity?: ItemRarity;
     price?: ItemPrice;
@@ -34,6 +35,13 @@ export interface ShopResponse {
 
 export async function getShop(lang: 'en' | 'ru' = 'en') {
     const { data } = await api.get(buildApiUrl('shop'), {
+        params: { lang }
+    });
+    return data as ShopResponse;
+}
+
+export async function getItemsList(lang: 'en' | 'ru' = 'en') {
+    const { data } = await api.get(buildApiUrl('items/list'), {
         params: { lang }
     });
     return data as ShopResponse;
