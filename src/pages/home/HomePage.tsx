@@ -10,7 +10,7 @@ export default function HomePage(): JSX.Element {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
 
-    // Пагинация
+    // Pagination and PageSize filter
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(() => {
         const stored = localStorage.getItem('pageSize');
@@ -20,8 +20,16 @@ export default function HomePage(): JSX.Element {
         }
         return 12;
     });
+    // Rarity filter
+    const [itemRarity, setItemRarity] = useState(() => {
+        const stored = localStorage.getItem('itemRarity');
+        if (stored) {
+            return (!stored || stored === '') ? '' : stored
+        }
+        return '';
+    })
 
-    // Загрузка данных
+    // Data fetch
     const load = useCallback(() => {
         setLoading(true);
         setError(null);
@@ -38,10 +46,10 @@ export default function HomePage(): JSX.Element {
             .finally(() => setLoading(false));
     }, []);
 
-    // Загрузка данных при первом рендере
+    // Fetch data on first render
     useEffect(() => { load(); }, [load]);
 
-    // Сбор единого массива товаров из ответа
+    // Memorized api data
     const items = useMemo(() => {
         return data?.shop
             ?.filter((s) => s.mainId && s.displayName)
@@ -52,25 +60,37 @@ export default function HomePage(): JSX.Element {
             })) ?? [];
     }, [data]);
 
-    // Считаем страницы и текущий срез
-    const { totalPages, pageItems } = useMemo(() => {
-        const totalPages = Math.max(1, Math.ceil(items.length / pageSize));
-        const safePage = Math.min(page, totalPages); // если уменьшили pageSize
-        const start = (safePage - 1) * pageSize;
-        const pageItems = items.slice(start, start + pageSize);
-        return { totalPages, pageItems };
-    }, [items, page, pageSize]);
+    // Items filtering by rarity
+    const filteredItems = useMemo(() => {
+        if (!itemRarity) return items; // return everything if filter is null
+        return items.filter((s) => s.rarity?.name?.toLowerCase() === itemRarity.toLowerCase());
+    }, [items, itemRarity]);
 
-    // Если поменялось количество товаров или размер страницы — сбрасываем на 1ю страницу
+    // Memorized page data
+    const { totalPages, pageItems } = useMemo(() => {
+        const totalPages = Math.max(1, Math.ceil(filteredItems.length / pageSize));
+        const safePage = Math.min(page, totalPages);
+        const start = (safePage - 1) * pageSize;
+        const pageItems = filteredItems.slice(start, start + pageSize);
+        return { totalPages, pageItems };
+    }, [filteredItems, page, pageSize]);
+
+    // Items count or page size has changed
     useEffect(() => {
         setPage(1);
-    }, [items.length, pageSize]);
+    }, [filteredItems.length, pageSize, itemRarity]);
 
-    // Сохранение выбранного кол-ва карточек на странице
+    // Save pageSize in localStorage
     useEffect(() => {
         localStorage.setItem('pageSize', pageSize.toString());
     }, [pageSize]);
 
+    // Save itemRarity in localStorage
+    useEffect(() => {
+        localStorage.setItem('itemRarity', itemRarity);
+    }, [itemRarity]);
+
+    // Change page handler
     const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
         setPage(value);
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -78,25 +98,26 @@ export default function HomePage(): JSX.Element {
 
 
     return (
-        // Container — центрирует контент и ограничивает ширину по сетке MUI.
-        // sx={{ py: 4 }} — вертикальные отступы (padding‑y).
         <Container sx={{ py: 4 }}>
             {loading && <Typography>Загрузка...</Typography>}
             {error && <Typography color="error">Ошибка: {error}</Typography>}
             {!loading && !error && (
                 <>
-                    {/* Панель управления пагинацией */}
+                    {/* Filters */}
                     <GoodsFilters
-                        total={items.length}
+                        total={filteredItems.length}
                         pageSize={pageSize}
                         setPageSize={setPageSize}
+                        itemRarity={itemRarity}
+                        setItemRarity={setItemRarity}
                     />
 
+                    {/* Grid */}
                     <Box sx={{ mb: 2, mt: 2 }}>
-                        <GoodsGrid goods={pageItems} />
+                        <GoodsGrid goods={pageItems} rarityFilter={itemRarity} />
                     </Box>
 
-                    {/* Пагинация ещё раз снизу */}
+                    {/* Pagination */}
                     {items.length > pageSize && (
                         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
                             <Pagination
@@ -110,7 +131,6 @@ export default function HomePage(): JSX.Element {
                         </Box>
                     )}
                 </>
-                
             )}
         </Container>
     );

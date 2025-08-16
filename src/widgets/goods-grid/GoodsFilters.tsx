@@ -1,13 +1,32 @@
-import { Box, FormControl, InputLabel, MenuItem, Select, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
+
+import SelectFilter from "../../shared/ui/SelectFilter";
 import { Dispatch, SetStateAction } from "react";
+import { getAllPageSizes } from "../../shared/constants/pagesize";
+import { getAllRarities } from "../../shared/constants/rarity";
 
 interface GoodsFiltersProps {
     total: number;
     pageSize: number;
     setPageSize: Dispatch<SetStateAction<number>>;
+    itemRarity: string;
+    setItemRarity: Dispatch<SetStateAction<string>>;
 }
 
-export default function GoodsFilters({ total, pageSize, setPageSize }: GoodsFiltersProps) {
+// PageSizeFilter
+const pageSizeNumbers: number[] = getAllPageSizes();
+// Rarity
+const rarities: string[] = ['All', ...getAllRarities().map((r) => {
+    return `${r.name[0].toUpperCase()}${r.name.slice(1).toLowerCase()}`
+})];
+
+export default function GoodsFilters({
+    total,
+    pageSize,
+    setPageSize,
+    itemRarity,
+    setItemRarity
+}: GoodsFiltersProps) {
     return (
         <Box
             sx={{
@@ -19,51 +38,24 @@ export default function GoodsFilters({ total, pageSize, setPageSize }: GoodsFilt
         >
             <Stack direction="row" spacing={2} alignItems="center">
                 <Typography variant="body2">
-                    Найдено товаров: <b>{total}</b>
+                    Items found: <b>{total}</b>
                 </Typography>
 
-                <FormControl size="small" sx={{ minWidth: 140 }}>
-                    <InputLabel
-                        id="page-size-label"
-                        sx={{
-                            color: 'black',
-                            '&.Mui-focused': {
-                                color: 'black'
-                            },
-                        }}
-                    >
-                        На странице
-                    </InputLabel>
-                    <Select
-                        labelId="page-size-label"
-                        value={pageSize}
-                        label="На странице"
-                        onChange={(e) => setPageSize(Number(e.target.value))}
-                        sx={{
-                            color: 'black',
-                            '& .MuiSelect-select': {
-                                fontWeight: 400,
-                            },
-                            '& .MuiOutlinedInput-notchedOutline': {
-                                borderColor: '#9c27b0',
-                            },
-                            '&:hover .MuiOutlinedInput-notchedOutline': {
-                                borderColor: '#9c27b0',
-                            },
-                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                borderColor: '#9c27b0',
-                            },
-                            '& .MuiSvgIcon-root': {
-                                color: '#9c27b0',
-                            },
-                        }}
-                    >
-                        <MenuItem value={8}>8</MenuItem>
-                        <MenuItem value={12}>12</MenuItem>
-                        <MenuItem value={24}>24</MenuItem>
-                        <MenuItem value={48}>48</MenuItem>
-                    </Select>
-                </FormControl>
+                <SelectFilter
+                    labelId={"page-size-label"}
+                    value={pageSize}
+                    label={"Page size"}
+                    onChange={(value) => setPageSize(Number(value))}
+                    collection={pageSizeNumbers}
+                />
+
+                <SelectFilter
+                    labelId={"item-rarity-label"}
+                    value={itemRarity}
+                    label={"Item rarity"}
+                    onChange={(value) => setItemRarity(value === "All" ? "" : String(value))}
+                    collection={rarities}
+                />
             </Stack>
         </Box>
     );

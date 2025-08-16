@@ -14,7 +14,7 @@ export default function Footer(): JSX.Element {
     >
       <Container maxWidth="lg">
         <Typography variant="body2" align="center">
-          © {new Date().getFullYear()} Fortnite Shop. All rights reserved.
+          © {new Date().getFullYear()} Fortnite Shop. Pet Project
         </Typography>
       </Container>
     </Box>

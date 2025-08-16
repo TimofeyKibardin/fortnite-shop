@@ -12,12 +12,16 @@ export interface RarityData {
     image: string;
 }
 
-export function getRarity(name: string): RarityData | undefined {
-    return rarity[name.toLowerCase()] || rarity.common;
+export function getRarityByID(id: string): RarityData | undefined {
+    return RARITY.find(r => r.id.toLowerCase() === id.toLowerCase());
 }
 
-const rarity: Record<string, RarityData> = {
-    common: {
+export function getAllRarities(): RarityData[] {
+    return RARITY;
+}
+
+const RARITY: RarityData[] = [
+    {
         id: "Common",
         name: "COMMON",
         translationID: "CommonRarity",
@@ -30,7 +34,7 @@ const rarity: Record<string, RarityData> = {
         },
         image: "https://media.fortniteapi.io/images/rarities/v2/rarity_common.png",
     },
-    uncommon: {
+    {
         id: "Uncommon",
         name: "UNCOMMON",
         translationID: "UncommonRarity",
@@ -43,7 +47,7 @@ const rarity: Record<string, RarityData> = {
         },
         image: "https://media.fortniteapi.io/images/rarities/v2/rarity_uncommon.png",
     },
-    rare: {
+    {
         id: "Rare",
         name: "RARE",
         translationID: "RareRarity",
@@ -56,7 +60,7 @@ const rarity: Record<string, RarityData> = {
         },
         image: "https://media.fortniteapi.io/images/rarities/v2/rarity_rare.png",
     },
-    epic: {
+    {
         id: "Epic",
         name: "Epic",
         translationID: "Epic",
@@ -69,7 +73,7 @@ const rarity: Record<string, RarityData> = {
         },
         image: "https://media.fortniteapi.io/images/rarities/v2/rarity_epic.png",
     },
-    legendary: {
+    {
         id: "Legendary",
         name: "LEGENDARY",
         translationID: "LegendaryRarity",
@@ -82,7 +86,7 @@ const rarity: Record<string, RarityData> = {
         },
         image: "https://media.fortniteapi.io/images/rarities/v2/rarity_legendary.png",
     },
-    mythic: {
+    {
         id: "Mythic",
         name: "MYTHIC",
         translationID: "MythicRarity",
@@ -95,7 +99,7 @@ const rarity: Record<string, RarityData> = {
         },
         image: "https://media.fortniteapi.io/images/rarities/v2/rarity_mythic.png",
     },
-    transcendent: {
+    {
         id: "Transcendent",
         name: "Exotic",
         translationID: "3802651D453178554363A8B5077F4773",
@@ -108,4 +112,4 @@ const rarity: Record<string, RarityData> = {
         },
         image: "https://media.fortniteapi.io/images/rarities/v2/rarity_transcendent.png",
     }
-};
+];

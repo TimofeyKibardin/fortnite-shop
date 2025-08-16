@@ -3,10 +3,11 @@ import { ShopItems } from "../../api/shop";
 import GoodCard from "../../entities/good/ui/GoodCard";
 
 interface GoodsGridProps {
-  goods: ShopItems[];
+    goods: ShopItems[];
+    rarityFilter: string;
 }
 
-export default function GoodsGrid({ goods }: GoodsGridProps) {
+export default function GoodsGrid({ goods, rarityFilter }: GoodsGridProps) {
     /* Получение типов */
     // function getUniqueTypes(goods: ShopItems[], type: string) {
     //     const values = new Set();
@@ -26,7 +27,7 @@ export default function GoodsGrid({ goods }: GoodsGridProps) {
         return (
         <Box
             sx={{
-                minHeight: "70vh", // высота для центрирования при пустом списке
+                minHeight: "70vh", // empty list height
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -42,15 +43,24 @@ export default function GoodsGrid({ goods }: GoodsGridProps) {
     return (
         <Box
             sx={{
-                minHeight: "70vh", // центрируем по высоте
+                minHeight: "70vh", // empty list height
                 display: "flex",
-                alignItems: "center", // по вертикали
-                justifyContent: "center", // по горизонтали
+                alignItems: "center",
+                justifyContent: "center",
             }}
         >
             <Grid container spacing={2} justifyContent="center">
                 {goods.map((item) => {
-                    if (!item.mainId || !item.displayName) return null;
+                    if (!item.mainId || !item.displayName) {
+                        return null;
+                    }
+                    else if (
+                        item.rarity && rarityFilter && rarityFilter !== ''
+                        && item.rarity.name.toLowerCase() !== rarityFilter.toLowerCase()
+                    ) {
+                        return null;
+                    }
+
                     return (
                         <Grid key={item.mainId}>
                             <GoodCard {...item} />
