@@ -1,17 +1,32 @@
 import { Box, Stack, Typography } from "@mui/material";
-import { Dispatch, SetStateAction } from "react";
+
 import SelectFilter from "../../shared/ui/SelectFilter";
+import { Dispatch, SetStateAction } from "react";
+import { getAllPageSizes } from "../../shared/constants/pagesize";
+import { getAllRarities } from "../../shared/constants/rarity";
 
 interface GoodsFiltersProps {
     total: number;
     pageSize: number;
     setPageSize: Dispatch<SetStateAction<number>>;
+    itemRarity: string;
+    setItemRarity: Dispatch<SetStateAction<string>>;
 }
 
 // PageSizeFilter
-const pageSizeNumbers = [8, 12, 24, 48];
+const pageSizeNumbers: number[] = getAllPageSizes();
+// Rarity
+const rarities: string[] = ['All', ...getAllRarities().map((r) => {
+    return `${r.name[0].toUpperCase()}${r.name.slice(1).toLowerCase()}`
+})];
 
-export default function GoodsFilters({ total, pageSize, setPageSize }: GoodsFiltersProps) {
+export default function GoodsFilters({
+    total,
+    pageSize,
+    setPageSize,
+    itemRarity,
+    setItemRarity
+}: GoodsFiltersProps) {
     return (
         <Box
             sx={{
@@ -32,6 +47,14 @@ export default function GoodsFilters({ total, pageSize, setPageSize }: GoodsFilt
                     label={"Page size"}
                     onChange={(value) => setPageSize(Number(value))}
                     collection={pageSizeNumbers}
+                />
+
+                <SelectFilter
+                    labelId={"item-rarity-label"}
+                    value={itemRarity}
+                    label={"Item rarity"}
+                    onChange={(value) => setItemRarity(value === "All" ? "" : String(value))}
+                    collection={rarities}
                 />
             </Stack>
         </Box>

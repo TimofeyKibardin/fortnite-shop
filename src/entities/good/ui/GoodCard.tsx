@@ -6,12 +6,12 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { cartStore } from "../../..";
 
 import { ShopItems } from "../../../api/shop";
-import { getRarity } from '../../../shared/constants/rarity';
+import { getRarityByID } from '../../../shared/constants/rarity';
 import placeholder from '../../../shared/assets/images/card-placeholder.jpg'
 
 
 export default observer(function GoodCard(props: ShopItems) {
-    const rarity = getRarity(props.rarity?.name || '');
+    const rarity = getRarityByID(props.rarity?.name || '');
 
     const inCart = cartStore.isInCart(props.combinedId);
     const imageSrc = props.displayAssets?.[0]?.full_background || placeholder;

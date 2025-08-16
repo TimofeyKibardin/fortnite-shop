@@ -3,10 +3,11 @@ import { ShopItems } from "../../api/shop";
 import GoodCard from "../../entities/good/ui/GoodCard";
 
 interface GoodsGridProps {
-  goods: ShopItems[];
+    goods: ShopItems[];
+    rarityFilter: string;
 }
 
-export default function GoodsGrid({ goods }: GoodsGridProps) {
+export default function GoodsGrid({ goods, rarityFilter }: GoodsGridProps) {
     /* Получение типов */
     // function getUniqueTypes(goods: ShopItems[], type: string) {
     //     const values = new Set();
@@ -50,7 +51,16 @@ export default function GoodsGrid({ goods }: GoodsGridProps) {
         >
             <Grid container spacing={2} justifyContent="center">
                 {goods.map((item) => {
-                    if (!item.mainId || !item.displayName) return null;
+                    if (!item.mainId || !item.displayName) {
+                        return null;
+                    }
+                    else if (
+                        item.rarity && rarityFilter && rarityFilter !== ''
+                        && item.rarity.name.toLowerCase() !== rarityFilter.toLowerCase()
+                    ) {
+                        return null;
+                    }
+
                     return (
                         <Grid key={item.mainId}>
                             <GoodCard {...item} />
