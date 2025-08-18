@@ -1,9 +1,11 @@
 import { Box, Stack, Typography } from "@mui/material";
+import { Dispatch, SetStateAction } from "react";
 
 import SelectFilter from "../../shared/ui/SelectFilter";
-import { Dispatch, SetStateAction } from "react";
 import { getAllPageSizes } from "../../shared/constants/pagesize";
 import { getAllRarities } from "../../shared/constants/rarity";
+import { PriceFilterValues } from "../../shared/types/PriceFilterValues";
+import PriceSliderFilter from "../../shared/ui/PriceSliderFilter";
 
 interface GoodsFiltersProps {
     total: number;
@@ -11,6 +13,9 @@ interface GoodsFiltersProps {
     setPageSize: Dispatch<SetStateAction<number>>;
     itemRarity: string;
     setItemRarity: Dispatch<SetStateAction<string>>;
+    priceBorders: number[];
+    priceValues: PriceFilterValues;
+    setPriceValues: Dispatch<SetStateAction<PriceFilterValues>>;
 }
 
 // PageSizeFilter
@@ -25,7 +30,10 @@ export default function GoodsFilters({
     pageSize,
     setPageSize,
     itemRarity,
-    setItemRarity
+    setItemRarity,
+    priceBorders,
+    priceValues,
+    setPriceValues
 }: GoodsFiltersProps) {
     return (
         <Box
@@ -55,6 +63,14 @@ export default function GoodsFilters({
                     label={"Item rarity"}
                     onChange={(value) => setItemRarity(value === "All" ? "" : String(value))}
                     collection={rarities}
+                />
+
+                <PriceSliderFilter
+                    labelId={"item-price-label"}
+                    label={"Item price"}
+                    values={priceValues}
+                    priceBorders={priceBorders}
+                    onChange={setPriceValues}                 
                 />
             </Stack>
         </Box>
