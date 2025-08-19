@@ -7,10 +7,13 @@ import GoodsGrid from "../../widgets/goods-grid/GoodsGrid";
 import GoodsFilters from "../../widgets/goods-grid/GoodsFilters";
 import { PriceFilterValues } from "../../shared/types/PriceFilterValues";
 
+interface HomePageProps {
+    itemTitle: string
+}
+
 const clamp = (v: number, min: number, max: number) => Math.min(Math.max(v, min), max);
 
-
-export default function HomePage(): JSX.Element {
+export default function HomePage({ itemTitle }: HomePageProps): JSX.Element {
     const [data, setData] = useState<ShopResponse | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -69,7 +72,7 @@ export default function HomePage(): JSX.Element {
     // Price slider range memorized
     const priceDomain = useMemo<[number, number]>(() => {
         const nums = items
-            .map((i) => i.price?.finalPrice)
+            .map((i) => i.price?.finalPrice)    
             .filter((n): n is number => typeof n === "number" && Number.isFinite(n));
 
         if (nums.length === 0) return [0, 0];
@@ -124,9 +127,13 @@ export default function HomePage(): JSX.Element {
             const price = item.price?.finalPrice ?? Number.NEGATIVE_INFINITY;
             const priceOk = price >= pv.priceMinValue && price <= pv.priceMaxValue;
 
-            return rarityOk && priceOk;
+            const titleOk =
+                !itemTitle.trim() ||
+                item.displayName.toLowerCase().includes(itemTitle.toLowerCase());
+
+            return rarityOk && priceOk && titleOk;
         });
-    }, [items, itemRarity, priceValues, priceDomain]);
+    }, [items, itemRarity, priceValues, priceDomain, itemTitle]);
 
     // Memorized page data
     const { totalPages, pageItems } = useMemo(() => {

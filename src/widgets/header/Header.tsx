@@ -4,6 +4,11 @@ import Button from '@mui/material/Button';
 import { styled, alpha } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout'
+import { useState } from 'react';
+
+interface HeaderProps {
+    setItemTitle: (itemTitle: string) => void
+}
 
 const Search = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -46,9 +51,21 @@ const StyledButton = styled(Button)(({ theme }) => ({
     fontWeight: 400,
 }));
 
-export default function Header() {
+export default function Header({
+    setItemTitle
+}: HeaderProps) {
     const location = useLocation();
     const isCartPage = location.pathname === '/cart';
+    const [inputValue, setInputValue] = useState('');
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+    };
+
+    const applySearch = () => {
+        const trimmed = inputValue.trim();
+        setItemTitle(trimmed);
+    }
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -69,11 +86,21 @@ export default function Header() {
                             <Search>
                                 <StyledInputBase
                                     placeholder="Search…"
+                                    value={inputValue}
+                                    onChange={handleInputChange}
+                                    onKeyDown={(event) => {
+                                        if (event.code === "Enter") {
+                                            event.preventDefault();
+                                            applySearch();
+                                        }
+                                    }}
                                     inputProps={{ 'aria-label': 'search' }}
                                 />
                             </Search>
 
-                            <StyledButton>
+                            <StyledButton
+                                onClick={applySearch}
+                            >
                                 <SearchIcon />
                             </StyledButton>
                             
