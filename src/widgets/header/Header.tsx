@@ -1,58 +1,60 @@
+import { Link as RouterLink, useLocation  } from 'react-router-dom';
+import { AppBar, Box, Toolbar, Typography, InputBase } from '@mui/material';
+import Button from '@mui/material/Button';
 import { styled, alpha } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout'
 
 const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    height: 40,
     borderRadius: theme.shape.borderRadius,
     backgroundColor: alpha(theme.palette.common.white, 0.15),
     '&:hover': {
         backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(1),
-        width: 'auto',
-    },
-}));
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
     color: 'inherit',
-    width: '100%',
     '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+        padding: theme.spacing(1),
         transition: theme.transitions.create('width'),
+        width: '18ch',
         [theme.breakpoints.up('sm')]: {
-            width: '12ch',
             '&:focus': {
-                width: '20ch',
+                width: '24ch',
             },
         },
     },
 }));
 
+const StyledButton = styled(Button)(({ theme }) => ({
+    height: 40,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'inherit',
+    backgroundColor: alpha(theme.palette.common.white, 0.15),
+    '&:hover': {
+        backgroundColor: alpha(theme.palette.common.white, 0.25),
+    },
+    textTransform: 'none',
+    fontWeight: 400,
+}));
+
 export default function Header() {
+    const location = useLocation();
+    const isCartPage = location.pathname === '/cart';
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static" color="secondary" >
-                <Toolbar>
+                <Toolbar sx={{ display: 'flex', gap: 1 }}>
+
                     <Typography
                         variant="h6"
                         noWrap
@@ -61,15 +63,42 @@ export default function Header() {
                     >
                         Fortnite Shop
                     </Typography>
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search…"
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </Search>
+
+                    {!isCartPage && (
+                        <>
+                            <Search>
+                                <StyledInputBase
+                                    placeholder="Search…"
+                                    inputProps={{ 'aria-label': 'search' }}
+                                />
+                            </Search>
+
+                            <StyledButton>
+                                <SearchIcon />
+                            </StyledButton>
+                            
+                            <Button
+                                component={RouterLink}
+                                to="/cart"
+                                endIcon={<ShoppingCartCheckoutIcon />}
+                                color="inherit"
+                                sx={{
+                                    backgroundColor: 'rgba(255,255,255,0.15)',
+                                    '&:hover': {
+                                    backgroundColor: 'rgba(255,255,255,0.25)',
+                                    },
+                                    textTransform: 'none',
+                                    fontWeight: 400,
+                                    ml: 2,
+                                    px: 2,
+                                    height: '40px',
+                                }}
+                            >
+                                Cart
+                            </Button>
+                        </>
+                    )}
+                    
                 </Toolbar>
             </AppBar>
         </Box>

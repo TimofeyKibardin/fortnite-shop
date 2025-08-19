@@ -165,7 +165,14 @@ export default function HomePage(): JSX.Element {
 
 
     return (
-        <Container sx={{ py: 4 }}>
+        <Container
+            sx={{
+                py: 4,
+                minHeight: '100vh',
+                display: 'flex',
+                flexDirection: 'column'
+            }}
+        >
             {loading && <Typography>Loading...</Typography>}
             {error && <Typography color="error">Error: {error}</Typography>}
             {!loading && !error && (

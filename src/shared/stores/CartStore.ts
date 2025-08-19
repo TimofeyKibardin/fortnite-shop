@@ -32,6 +32,7 @@ export class CartStore {
         }
     }
 
+    // Computed, returns computed result
     get cart() {
         return Array.from(this.cartItems.values());
     }
