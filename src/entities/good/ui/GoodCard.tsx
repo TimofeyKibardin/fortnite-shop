@@ -22,6 +22,11 @@ export default observer(function GoodCard(props: ShopItems) {
             : cartStore.addToCart(props);
     }
 
+    const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+        e.currentTarget.onerror = null; 
+        e.currentTarget.src = placeholder;
+    }
+
     return (
         <Box sx={{ minWidth: 250 }}>
             <Card
@@ -39,6 +44,7 @@ export default observer(function GoodCard(props: ShopItems) {
                     component="img"
                     image={imageSrc}
                     alt={props.displayName}
+                    onError={handleImageError}
                     sx={{ height: 'fit-content', objectFit: 'cover' }}
                 />
                 <CardContent>

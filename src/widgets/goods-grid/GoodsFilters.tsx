@@ -15,7 +15,7 @@ interface GoodsFiltersProps {
     setItemRarity: Dispatch<SetStateAction<string>>;
     priceBorders: number[];
     priceValues: PriceFilterValues;
-    setPriceValues: Dispatch<SetStateAction<PriceFilterValues>>;
+    setPriceValues: Dispatch<SetStateAction<PriceFilterValues | undefined>>;
 }
 
 // PageSizeFilter
@@ -66,7 +66,7 @@ export default function GoodsFilters({
                 />
 
                 <PriceSliderFilter
-                    labelId={"item-price-label"}
+                    labelId="item-price-label"
                     label={"Item price"}
                     values={priceValues}
                     priceBorders={priceBorders}
