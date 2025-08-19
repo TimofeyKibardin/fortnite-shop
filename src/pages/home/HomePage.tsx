@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { getItemsList, getShop, ShopResponse } from "../../api/shop";
+import { getShop, ShopResponse } from "../../api/shop";
 import { Box, Container, Pagination, Typography } from "@mui/material";
 import { JSX, useState, useEffect, useCallback, useMemo } from "react";
 
@@ -153,7 +153,6 @@ export default function HomePage(): JSX.Element {
 
     // Save itemPrice in localStorage
     useEffect(() => {
-        console.log(JSON.stringify(priceValues));
         if (!priceRef.current || !priceValues) return;
         localStorage.setItem('priceFilterValues', JSON.stringify(priceValues));
     }, [priceValues]);

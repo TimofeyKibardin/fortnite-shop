@@ -1,10 +1,11 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, observable } from "mobx";
 import { CartItem } from '../types/CartItem';
 
 const CART_STORAGE_KEY = "fortnite_cart";
 
 export class CartStore {
-    cart: CartItem[] = [];
+    cartItems = new Map<string, CartItem>(); // CartItem list
+    cartIds = observable.set<string>(); // Fast check
 
     constructor() {
         makeAutoObservable(this);
@@ -12,38 +13,56 @@ export class CartStore {
     }
 
     private saveToStorage() {
-        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(this.cart));
+        const items = Array.from(this.cartItems.values());
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
     }
 
     private loadFromStorage() {
         const stored = localStorage.getItem(CART_STORAGE_KEY);
         if (stored) {
             try {
-                this.cart = JSON.parse(stored);
+                const parsed: CartItem[] = JSON.parse(stored);
+                parsed.forEach((item) => {
+                    this.cartItems.set(item.combinedId, item);
+                    this.cartIds.add(item.combinedId);
+                });
             } catch {
                 localStorage.removeItem(CART_STORAGE_KEY);
             }
         }
     }
 
+    get cart() {
+        return Array.from(this.cartItems.values());
+    }
+
+    toggle(item: CartItem) {
+        this.isInCart(item.combinedId)
+            ? this.removeFromCart(item.combinedId)
+            : this.addToCart(item);
+    }
+
     addToCart(item: CartItem) {
-        if (!this.cart.find((i) => i.combinedId === item.combinedId)) {
-            this.cart.push(item);
+        if (!this.cartItems.has(item.combinedId)) {
+            this.cartItems.set(item.combinedId, item);
+            this.cartIds.add(item.combinedId);
             this.saveToStorage();
         }
     }
 
     removeFromCart(combinedId: string) {
-        this.cart = this.cart.filter((i) => i.combinedId !== combinedId);
+        this.cartItems.delete(combinedId);
+        this.cartIds.delete(combinedId);
         this.saveToStorage();
     }
 
     clearCart() {
-        this.cart = [];
+        this.cartItems.clear();
+        this.cartIds.clear();
         this.saveToStorage();
     }
 
     isInCart(combinedId: string) {
-        return this.cart.some((i) => i.combinedId === combinedId);
+        return this.cartIds.has(combinedId);
     }
 }

@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { Box, Button, Card, CardContent, CardMedia, Chip, Tooltip, Typography } from "@mui/material";
 import { RemoveShoppingCart } from "@mui/icons-material";
 import { observer } from "mobx-react-lite";
@@ -11,21 +12,19 @@ import placeholder from '../../../shared/assets/images/card-placeholder.jpg'
 
 
 export default observer(function GoodCard(props: ShopItems) {
-    const rarity = getRarityByID(props.rarity?.name || '');
+    const rarity = getRarityByID(props.rarity?.id || props.rarity?.name || "");
 
     const inCart = cartStore.isInCart(props.combinedId);
     const imageSrc = props.displayAssets?.[0]?.full_background || placeholder;
 
-    const handleToggleButton = () => {
-        inCart
-            ? cartStore.removeFromCart(props.combinedId)
-            : cartStore.addToCart(props);
-    }
+    const handleToggleButton = useCallback(() => {
+        cartStore.toggle(props);
+    }, [props]);
 
-    const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-        e.currentTarget.onerror = null; 
+    const handleImageError = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
+        e.currentTarget.onerror = null;
         e.currentTarget.src = placeholder;
-    }
+    }, []);
 
     return (
         <Box sx={{ minWidth: 250 }}>
@@ -65,11 +64,11 @@ export default observer(function GoodCard(props: ShopItems) {
                             {props.displayName}
                         </Typography>
                     </Tooltip>
-                    {props.price?.finalPrice && (
-                        <Typography variant="subtitle1" component="div" noWrap>
+                        {typeof props.price?.finalPrice === "number" && (
+                            <Typography variant="subtitle1" component="div" noWrap>
                             Price: {props.price.finalPrice}
-                        </Typography>
-                    )}
+                            </Typography>
+                        )}
                     <Button
                         variant={inCart ? "outlined" : "contained"}
                         color="secondary"

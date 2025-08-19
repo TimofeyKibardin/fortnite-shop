@@ -8,21 +8,7 @@ interface GoodsGridProps {
 }
 
 export default function GoodsGrid({ goods, rarityFilter }: GoodsGridProps) {
-    /* Получение типов */
-    // function getUniqueTypes(goods: ShopItems[], type: string) {
-    //     const values = new Set();
-    //     for (const item of goods) {
-    //         const typeItem = item.mainType
-    //         if (typeof typeItem === type) {
-    //             values.add(typeItem);
-    //         }
-    //     }
-    //     return Array.from(values);
-    // }
-    // console.log(getUniqueTypes(goods, 'string'));
-    /* Получение типов */
-
-    console.log(goods);
+    
     if (!goods || goods.length === 0) {
         return (
         <Box
