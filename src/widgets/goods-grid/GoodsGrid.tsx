@@ -34,7 +34,7 @@ export default function GoodsGrid({ goods, rarityFilter }: GoodsGridProps) {
             }}
         >
             <Typography variant="h6" color="text.secondary">
-                Нет товаров
+                Not found
             </Typography>
         </Box>
         );
