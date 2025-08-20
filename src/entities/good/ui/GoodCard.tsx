@@ -13,7 +13,6 @@ import placeholder from '../../../shared/assets/images/card-placeholder.jpg'
 
 export default observer(function GoodCard(props: ShopItems) {
     const rarity = getRarityByID(props.rarity?.id || props.rarity?.name || "");
-
     const inCart = cartStore.isInCart(props.combinedId);
     const imageSrc = props.displayAssets?.[0]?.full_background || placeholder;
 
@@ -66,7 +65,7 @@ export default observer(function GoodCard(props: ShopItems) {
                     </Tooltip>
                         {typeof props.price?.finalPrice === "number" && (
                             <Typography variant="subtitle1" component="div" noWrap>
-                            Price: {props.price.finalPrice}
+                                Price: {props.price.finalPrice}
                             </Typography>
                         )}
                     <Button
